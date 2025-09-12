@@ -66,5 +66,12 @@ public class Category {
 		this.isActive = isActive;
 	}
 
+	@Override
+	public String toString() {
+		return "Category [categoryId=" + categoryId + ", categoryName=" + categoryName + ", description=" + description
+				+ ", isActive=" + isActive + "]";
+	}
+	
+	
 	
 }
