@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +44,7 @@ public class FoodController {
 
     // Lấy tất cả món
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER') or hasRole('STAFF')")
     public ResponseEntity<List<Food>> getAllFoods() {
         List<Food> foods = foodService.getAllFoods();
         return new ResponseEntity<>(foods, HttpStatus.OK);
@@ -50,13 +52,15 @@ public class FoodController {
 
     // Tìm món phổ biến nhất (theo số lượng đơn đã đặt)
     @GetMapping("/popular")
-    public ResponseEntity<List<FoodDTO>> getTopPopularFoods(@RequestParam(defaultValue = "8") int limit) {
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER') or hasRole('STAFF')")
+    public ResponseEntity<List<FoodDTO>> getTopPopularFoods(@RequestParam(defaultValue = "3") int limit) {
         List<FoodDTO> foods = foodService.getTopPopularFoods(limit);
         return new ResponseEntity<>(foods, HttpStatus.OK);
     }
 
     // Tìm món theo danh mục
     @GetMapping("/by-category")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER') or hasRole('STAFF')")
     public ResponseEntity<List<FoodDTO>> getFoodsByCategory(@RequestParam int categoryId) {
         List<FoodDTO> foods = foodService.getFoodsByCategory(categoryId);
         return new ResponseEntity<>(foods, HttpStatus.OK);
@@ -64,6 +68,7 @@ public class FoodController {
 
     // Tìm món theo tên (có thể chứa một phần tên)
     @GetMapping("/by-name")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER') or hasRole('STAFF')")
     public ResponseEntity<List<FoodDTO>> getFoodsByName(@RequestParam String name) {
         List<FoodDTO> foods = foodService.getFoodsByName(name);
         return new ResponseEntity<>(foods, HttpStatus.OK);
@@ -71,6 +76,7 @@ public class FoodController {
 
     // Tìm món theo trạng thái
     @GetMapping("/by-status")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER') or hasRole('STAFF')")
     public ResponseEntity<List<FoodDTO>> getFoodsByStatus(@RequestParam String status) {
         List<FoodDTO> foods = foodService.getFoodsByStatus(status);
         return new ResponseEntity<>(foods, HttpStatus.OK);
@@ -78,6 +84,7 @@ public class FoodController {
 
     // Tìm món theo khoảng giá
     @GetMapping("/by-price")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER') or hasRole('STAFF')")
     public ResponseEntity<List<FoodDTO>> getFoodsByPrice(@RequestParam double minPrice, @RequestParam double maxPrice) {
         List<FoodDTO> foods = foodService.getFoodsByPriceRange(minPrice, maxPrice);
         return new ResponseEntity<>(foods, HttpStatus.OK);
@@ -85,6 +92,7 @@ public class FoodController {
 
     // Lấy món theo id
     @GetMapping("/by-id")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER') or hasRole('STAFF')")
     public ResponseEntity<Food> getFoodById(@RequestParam int foodId) {
         Food food = foodService.getFoodById(foodId);
         if (food == null) {
@@ -95,6 +103,7 @@ public class FoodController {
 
     // Chỉnh sửa món
     @PutMapping("/update")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateFood(@RequestBody Food food, HttpServletRequest request) {
         try {
             Food existingFood = foodService.getFoodById(food.getFoodId());
@@ -123,6 +132,7 @@ public class FoodController {
 
     // Thêm món mới
     @PostMapping("/add")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> addFood(@RequestBody Food foodDTO, HttpServletRequest request) {
         try {
             Food food = new Food();
@@ -147,6 +157,7 @@ public class FoodController {
 
     // Xóa món
     @DeleteMapping("/delete")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteFood(@RequestParam int foodId, HttpServletRequest request) {
         try {
             boolean isDeleted = foodService.deleteFood(foodId);
@@ -163,6 +174,7 @@ public class FoodController {
     }
 
     @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> importFromExcel(@RequestParam("file") MultipartFile file) {
         try {
             Map<String, Object> result = foodService.importFromExcel(file.getInputStream(), categoryService);

@@ -135,7 +135,8 @@ public class FoodService {
                 headers.add("Lỗi"); // Thêm cột lỗi
             }
 
-            int rowNum = 1;
+            @SuppressWarnings("unused")
+			int rowNum = 1;
             while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
                 rowNum++;

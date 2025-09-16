@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,11 +39,13 @@ public class CategoryController {
 
 	// lấy tất cả danh mục
 	@GetMapping
+	@PreAuthorize("hasRole('ADMIN') or hasRole('USER') or hasRole('STAFF')")
 	public Iterable<Category> getAllCategory() {
 		return categoryService.getAllCategory();
 	}
 
 	@PostMapping("/add")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> addCategory(@RequestBody Category category, HttpServletRequest request) {
 		try {
 			// Kiểm tra tên danh mục trùng
@@ -68,6 +71,7 @@ public class CategoryController {
 	}
 
 	@DeleteMapping("/delete")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> deleteCategory(@RequestParam Integer id, HttpServletRequest request) {
 		try {
 			Category existingCategory = categoryService.getCategoryById(id);
@@ -93,6 +97,7 @@ public class CategoryController {
 	}
 	
 	@PutMapping("/update")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> updateCategory(@RequestBody Category category, HttpServletRequest request) {
 		try {
 			Category existingCategory = categoryService.getCategoryById(category.getCategoryId());
