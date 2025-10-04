@@ -1,14 +1,9 @@
 package com.project.Entity;
 
-
-import lombok.*;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "tables")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Tables {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +19,51 @@ public class Tables {
     @Column(nullable = false)
     private Status status = Status.AVAILABLE;
 
-    public enum Status {
+    public Tables() {}
+    
+    public Tables(Integer tableId, String tableNumber, String qrCode, Status status) {
+		super();
+		this.tableId = tableId;
+		this.tableNumber = tableNumber;
+		this.qrCode = qrCode;
+		this.status = status;
+	}
+
+	public enum Status {
         AVAILABLE, OCCUPIED
     }
+
+	public Integer getTableId() {
+		return tableId;
+	}
+
+	public void setTableId(Integer tableId) {
+		this.tableId = tableId;
+	}
+
+	public String getTableNumber() {
+		return tableNumber;
+	}
+
+	public void setTableNumber(String tableNumber) {
+		this.tableNumber = tableNumber;
+	}
+
+	public String getQrCode() {
+		return qrCode;
+	}
+
+	public void setQrCode(String qrCode) {
+		this.qrCode = qrCode;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+    
+    
 }

@@ -1,14 +1,10 @@
 package com.project.Entity;
-import lombok.*;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "orders")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,4 +57,113 @@ public class Order {
     public enum PaymentStatus {
         PENDING, PAID
     }
+
+	public Order(Integer orderId, User user, Tables table, String guestName, String guestPhone, BigDecimal totalPrice,
+			Status status, PaymentMethod paymentMethod, PaymentStatus paymentStatus, Promotion promotion,
+			LocalDateTime createdAt) {
+		super();
+		this.orderId = orderId;
+		this.user = user;
+		this.table = table;
+		this.guestName = guestName;
+		this.guestPhone = guestPhone;
+		this.totalPrice = totalPrice;
+		this.status = status;
+		this.paymentMethod = paymentMethod;
+		this.paymentStatus = paymentStatus;
+		this.promotion = promotion;
+		this.createdAt = createdAt;
+	}
+    
+    public Order() {}
+
+	public Integer getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(Integer orderId) {
+		this.orderId = orderId;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Tables getTable() {
+		return table;
+	}
+
+	public void setTable(Tables table) {
+		this.table = table;
+	}
+
+	public String getGuestName() {
+		return guestName;
+	}
+
+	public void setGuestName(String guestName) {
+		this.guestName = guestName;
+	}
+
+	public String getGuestPhone() {
+		return guestPhone;
+	}
+
+	public void setGuestPhone(String guestPhone) {
+		this.guestPhone = guestPhone;
+	}
+
+	public BigDecimal getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(BigDecimal totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	public PaymentMethod getPaymentMethod() {
+		return paymentMethod;
+	}
+
+	public void setPaymentMethod(PaymentMethod paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
+
+	public PaymentStatus getPaymentStatus() {
+		return paymentStatus;
+	}
+
+	public void setPaymentStatus(PaymentStatus paymentStatus) {
+		this.paymentStatus = paymentStatus;
+	}
+
+	public Promotion getPromotion() {
+		return promotion;
+	}
+
+	public void setPromotion(Promotion promotion) {
+		this.promotion = promotion;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+    
+    
 }

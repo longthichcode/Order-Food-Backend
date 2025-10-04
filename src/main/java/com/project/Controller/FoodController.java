@@ -185,7 +185,8 @@ public class FoodController {
                 return ResponseEntity.ok()
                         .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Error_Foods.xlsx")
                         .contentType(MediaType.parseMediaType(
-                                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                                "application/vnd.openxmlformats-officedocument.spreadsheetml."
+                                + "sheet"))
                         .body(errorFile);
             }
 

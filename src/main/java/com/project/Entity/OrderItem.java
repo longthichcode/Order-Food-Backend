@@ -37,4 +37,65 @@ public class OrderItem {
             throw new IllegalArgumentException("Quantity must be greater than 0");
         }
     }
+
+	public OrderItem(Integer orderItemId, Order order, Food food, Integer quantity, BigDecimal price, String note) {
+		super();
+		this.orderItemId = orderItemId;
+		this.order = order;
+		this.food = food;
+		this.quantity = quantity;
+		this.price = price;
+		this.note = note;
+	}
+    
+	public OrderItem() {}
+
+	public Integer getOrderItemId() {
+		return orderItemId;
+	}
+
+	public void setOrderItemId(Integer orderItemId) {
+		this.orderItemId = orderItemId;
+	}
+
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
+	}
+
+	public Food getFood() {
+		return food;
+	}
+
+	public void setFood(Food food) {
+		this.food = food;
+	}
+
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+    
 }
