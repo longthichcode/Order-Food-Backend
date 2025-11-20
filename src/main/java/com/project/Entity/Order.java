@@ -24,6 +24,12 @@ public class Order {
     @Column(length = 15)
     private String guestPhone;
 
+    @Column(length = 255) // Thêm trường địa chỉ
+    private String address; // Trường mới
+
+    @Column(length = 500)
+    private String paymentUrl;
+    
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalPrice;
 
@@ -55,18 +61,20 @@ public class Order {
     }
 
     public enum PaymentStatus {
-        PENDING, PAID
+        PENDING, PAID, CANCELLED
     }
-
-	public Order(Integer orderId, User user, Tables table, String guestName, String guestPhone, BigDecimal totalPrice,
-			Status status, PaymentMethod paymentMethod, PaymentStatus paymentStatus, Promotion promotion,
-			LocalDateTime createdAt) {
+    
+	public Order(Integer orderId, User user, Tables table, String guestName, String guestPhone, String address,
+			String paymentUrl, BigDecimal totalPrice, Status status, PaymentMethod paymentMethod,
+			PaymentStatus paymentStatus, Promotion promotion, LocalDateTime createdAt) {
 		super();
 		this.orderId = orderId;
 		this.user = user;
 		this.table = table;
 		this.guestName = guestName;
 		this.guestPhone = guestPhone;
+		this.address = address;
+		this.paymentUrl = paymentUrl;
 		this.totalPrice = totalPrice;
 		this.status = status;
 		this.paymentMethod = paymentMethod;
@@ -74,8 +82,9 @@ public class Order {
 		this.promotion = promotion;
 		this.createdAt = createdAt;
 	}
-    
-    public Order() {}
+	
+	public Order() {
+	}
 
 	public Integer getOrderId() {
 		return orderId;
@@ -115,6 +124,22 @@ public class Order {
 
 	public void setGuestPhone(String guestPhone) {
 		this.guestPhone = guestPhone;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getPaymentUrl() {
+		return paymentUrl;
+	}
+
+	public void setPaymentUrl(String paymentUrl) {
+		this.paymentUrl = paymentUrl;
 	}
 
 	public BigDecimal getTotalPrice() {

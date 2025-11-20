@@ -52,6 +52,12 @@ public class CartService {
 
 		return new CartDTO(cart.getCartId(), cart.getUser().getUserId(), cart.getPromoCode(), cartItemDTOs, totalPrice);
 	}
+	
+	//lấy tất cả giỏ hàng có trên hệ thống
+	public List<CartDTO> getAllCart() {
+		List<Cart> carts = cartRepository.findAll();
+		return carts.stream().map(this::toCartDTO).collect(Collectors.toList());
+	}
 
 	// Lấy giỏ hàng theo userId
 	public CartDTO getCart(Integer userId) {
@@ -157,6 +163,17 @@ public class CartService {
 		}
 
 		cart.setPromoCode(promoCode);
+		cartRepository.save(cart);
+		return toCartDTO(cart);
+	}
+
+	// huỷ áp dụng khuyến mãi
+	public CartDTO removePromotion(Integer userId) {
+		Cart cart = cartRepository
+				.findByUser(userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found")))
+				.orElseThrow(() -> new RuntimeException("Cart not found"));
+
+		cart.setPromoCode(null);
 		cartRepository.save(cart);
 		return toCartDTO(cart);
 	}

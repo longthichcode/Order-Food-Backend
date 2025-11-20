@@ -10,6 +10,7 @@ import com.project.Repository.PromotionRepository;
 import com.project.Repository.SalesReportRepository;
 import com.project.Repository.TablesRepository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class OrderService {
 	private FoodRepository foodRepository;
 
 	@Autowired
-	private PromotionRepository promorionRepository;
+	private PromotionRepository promotionRepository;
 
 	@Autowired
 	private OrderItemRepository orderItemRepository;
@@ -45,9 +46,12 @@ public class OrderService {
 	@Autowired
 	private NotificationService notificationService;
 
+	@Autowired
+	private PaymentService paymentService;
+
 	@Transactional
 	public Order createOrderFromCart(Integer userId, Integer tableId, String guestName, String guestPhone,
-			String promoCode) {
+			String promoCode, String address, Order.PaymentMethod paymentMethod) {
 		// Lấy giỏ hàng từ DB
 		CartDTO cartDTO = cartService.getCart(userId);
 		if (cartDTO.getCartItems().isEmpty()) {
@@ -72,20 +76,34 @@ public class OrderService {
 		order.setTable(table);
 		order.setGuestName(guestName);
 		order.setGuestPhone(guestPhone);
+		order.setAddress(address);
 		order.setTotalPrice(cartDTO.getTotalPrice());
 		order.setStatus(Order.Status.PENDING);
-		order.setPaymentMethod(Order.PaymentMethod.CASH);
+		order.setPaymentMethod(paymentMethod != null ? paymentMethod : Order.PaymentMethod.CASH); // Set paymentMethod
 		order.setPaymentStatus(Order.PaymentStatus.PENDING);
 		order.setCreatedAt(LocalDateTime.now());
 
 		// Áp dụng khuyến mãi
 		if (promoCode != null && !promoCode.isEmpty()) {
 			cartService.applyPromotion(userId, promoCode);
-			order.setPromotion(promorionRepository.findByCode(cartDTO.getPromoCode()).orElse(null));
+			order.setPromotion(promotionRepository.findByCode(cartDTO.getPromoCode()).orElse(null));
 		}
 
 		// Lưu đơn hàng
 		order = orderRepository.save(order);
+
+		// Nếu là PAYOS, tạo link thanh toán
+		if (order.getPaymentMethod() == Order.PaymentMethod.PAYOS) {
+			String paymentUrl = null;
+			try {
+				paymentUrl = paymentService.createPaymentLink(order);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			order.setPaymentUrl(paymentUrl);
+			order = orderRepository.save(order); // Cập nhật lại order với paymentUrl
+		}
 
 		// Tạo OrderItem từ CartItemDTO
 		for (CartItemDTO cartItemDTO : cartDTO.getCartItems()) {
@@ -100,7 +118,7 @@ public class OrderService {
 		}
 
 		// Gửi thông báo
-		String message = "New order created with ID: " + order.getOrderId();
+		String message = "Bạn có một đơn hàng mới, mã đơn hàng : " + order.getOrderId();
 		notificationService.sendNotification(order, message, userId);
 
 		// Xóa giỏ hàng trong DB
@@ -109,6 +127,7 @@ public class OrderService {
 		return order;
 	}
 
+	// hoàn thành đơn hàng 
 	@Transactional
 	public void completeOrder(Integer orderId) {
 		Order order = orderRepository.findById(orderId)
@@ -137,5 +156,40 @@ public class OrderService {
 		String message = "Order " + order.getOrderId() + " has been completed.";
 		notificationService.sendNotification(order, message,
 				order.getUser() != null ? order.getUser().getUserId() : null);
+	}
+
+	// lấy tất cả đơn hàng 
+	public Iterable<Order> getAllOrders() {
+		return orderRepository.findAll();
+	}
+
+	// lấy đơn hàng theo id
+	public Order getOrderById(Integer orderId) {
+		return orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("Order not found"));
+	}
+
+	// lấy tất cả order item theo order id
+	public Iterable<OrderItem> getOrderItemsByOrderId(Integer orderId) {
+		return orderItemRepository.findByOrderOrderId(orderId);
+	}
+
+	// cập nhật trạng thái đơn hàng
+	public void updateOrderStatus(Integer orderId, String status) {
+		orderRepository.updateOrderStatus(orderId, status);
+	}
+
+	//cập nhât trạng thái thanh toán đơn hàng
+	public void updateOrderPaymentStatus(Integer orderId, String paymentStatus) {
+		orderRepository.updatePaymentStatus(orderId, paymentStatus);
+	}
+	
+	// lấy đơn hàng theo khoảng thời gian
+	public Iterable<Order> getOrdersByCreatedAtBetween(LocalDate start, LocalDate end) {
+		return orderRepository.findByCreatedAtBetween(start, end);
+	}
+	
+	// lấy đơn hàng theo user id
+	public Iterable<Order> getOrdersByUserId(Integer userId) {
+		return orderRepository.findByUserId(userId);
 	}
 }

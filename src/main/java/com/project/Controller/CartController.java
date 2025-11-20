@@ -2,6 +2,9 @@ package com.project.Controller;
 
 import com.project.DTO.CartDTO;
 import com.project.Service.CartService;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +15,12 @@ public class CartController {
 
 	@Autowired
 	private CartService cartService;
+	
+	//lấy tất cả giỏ hàng có trên hệ thống 
+	@GetMapping()
+	public ResponseEntity<List<CartDTO>> getAllCart() {
+		return ResponseEntity.ok(cartService.getAllCart());
+	}
 
 	// Xem giỏ hàng
 	@GetMapping("/{userId}")
@@ -67,6 +76,16 @@ public class CartController {
 	public ResponseEntity<CartDTO> applyPromotion(@PathVariable Integer userId, @RequestParam String promoCode) {
 		try {
 			return ResponseEntity.ok(cartService.applyPromotion(userId, promoCode));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+	
+	//huỷ áp dụng khuyến mãi 
+	@DeleteMapping("/{userId}/remove-promotion")
+	public ResponseEntity<CartDTO> removePromotion(@PathVariable Integer userId) {
+		try {
+			return ResponseEntity.ok(cartService.removePromotion(userId));
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
 		}

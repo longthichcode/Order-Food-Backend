@@ -37,25 +37,41 @@ public class User {
     private String email;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private Gender gender;
+    
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    public enum Gender {
+    	MALE, FEMALE
+    }
+    
+    public enum Role {
+        CUSTOMER, STAFF, ADMIN
+    }
+    
     public User() {}
-    public User(String username, String password, String fullName, String phone, String email, Role role) {
+    
+
+	public User(Integer userId, String username, String password, String fullName, String phone, String email,
+			Gender gender, Role role, LocalDateTime createdAt) {
+		super();
+		this.userId = userId;
 		this.username = username;
 		this.password = password;
 		this.fullName = fullName;
 		this.phone = phone;
 		this.email = email;
+		this.gender = gender;
 		this.role = role;
+		this.createdAt = createdAt;
 	}
-    
-    public enum Role {
-        CUSTOMER, STAFF, ADMIN
-    }
+
 
 	public Integer getUserId() {
 		return userId;
@@ -105,6 +121,14 @@ public class User {
 		this.email = email;
 	}
 
+	public Gender getGender() {
+		return gender;
+	}
+
+	public void setGender(Gender gender) {
+		this.gender = gender;
+	}
+
 	public Role getRole() {
 		return role;
 	}
@@ -120,6 +144,15 @@ public class User {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
+
+
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", fullName=" + fullName
+				+ ", phone=" + phone + ", email=" + email + ", gender=" + gender + ", role=" + role + ", createdAt="
+				+ createdAt + "]";
+	}
+    
     
     
 }

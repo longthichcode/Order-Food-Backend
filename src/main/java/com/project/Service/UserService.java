@@ -17,6 +17,7 @@ public class UserService {
 	public Iterable<User> getAllUsers() {
 		return userRepository.findAll();
 	}
+
 	// Thêm người dùng mới
 	public boolean addUser(User user) {
 		try {
@@ -49,6 +50,16 @@ public class UserService {
 		try {
 			userRepository.deleteById(userId);
 			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	// sửa vai trò người dùng
+	public boolean updateUserRole(Integer id, String role) {
+		try {
+			return userRepository.updateUserRole(id, role);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
