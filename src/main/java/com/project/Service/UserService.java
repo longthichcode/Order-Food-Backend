@@ -45,11 +45,20 @@ public class UserService {
 		return userRepository.findById(userId).orElse(null);
 	}
 
-	// xoá người dùng theo ID
-	public boolean deleteUser(int userId) {
+	// Vô hiệu hoá tài khoản người dùng
+	public boolean disableUserAccount(Integer id) {
 		try {
-			userRepository.deleteById(userId);
-			return true;
+			return userRepository.disableUserAccount(id) > 0 ;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	// Mở khoá tài khoản người dùng
+	public boolean undisableUserAccount(Integer id) {
+		try {
+			return userRepository.undisableUserAccount(id) > 0 ;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

@@ -47,6 +47,9 @@ public class User {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Column(name = "status", nullable = false)
+    public boolean status = true;
+    
     public enum Gender {
     	MALE, FEMALE
     }
@@ -54,12 +57,9 @@ public class User {
     public enum Role {
         CUSTOMER, STAFF, ADMIN
     }
-    
-    public User() {}
-    
 
 	public User(Integer userId, String username, String password, String fullName, String phone, String email,
-			Gender gender, Role role, LocalDateTime createdAt) {
+			Gender gender, Role role, LocalDateTime createdAt, boolean status) {
 		super();
 		this.userId = userId;
 		this.username = username;
@@ -70,8 +70,10 @@ public class User {
 		this.gender = gender;
 		this.role = role;
 		this.createdAt = createdAt;
+		this.status = status;
 	}
-
+    
+    public User() {}
 
 	public Integer getUserId() {
 		return userId;
@@ -145,14 +147,23 @@ public class User {
 		this.createdAt = createdAt;
 	}
 
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
 
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", fullName=" + fullName
 				+ ", phone=" + phone + ", email=" + email + ", gender=" + gender + ", role=" + role + ", createdAt="
-				+ createdAt + "]";
+				+ createdAt + ", status=" + status + "]";
 	}
     
+    
+	
     
     
 }

@@ -48,6 +48,12 @@ public class AuthController {
 				.orElseThrow(() -> new RuntimeException("User not found"));
 
 		// Trả về jwt + thông tin user
+		if(user == null){
+			return ResponseEntity.badRequest().body("User không tồn tại !!! ");
+		}
+		if(user.isStatus() == false){
+			return ResponseEntity.ok("Tài khoản đã bị vô hiệu hoá !!! ");
+		}
 		return ResponseEntity.ok(new AuthResponse(jwt, user));
 	}
 }

@@ -53,7 +53,7 @@ public class PaymentService {
     }
 
     public String createPaymentLink(Order order) throws Exception {
-        String url = "https://api-merchant.payos.vn/v2/payment-requests"; // Production (tiền thật)
+        String url = "https://api-merchant.payos.vn/v2/payment-requests";
 
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("orderCode", order.getOrderId().longValue());
@@ -63,7 +63,7 @@ public class PaymentService {
         body.put("cancelUrl", cancelUrl + "?orderId=" + order.getOrderId());
 
         // Tạo signature đúng theo docs mới
-        String signature = createSignature(body, "9e7bbebffd69c7178826e10c3420dbd0b863a42bdaf825065b3f281d9a25b0cb"); // ← Dùng checksum key live
+        String signature = createSignature(body, "9e7bbebffd69c7178826e10c3420dbd0b863a42bdaf825065b3f281d9a25b0cb"); 
         body.put("signature", signature);
 
         HttpHeaders headers = new HttpHeaders();

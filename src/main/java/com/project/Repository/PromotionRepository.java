@@ -17,4 +17,11 @@ public interface PromotionRepository extends JpaRepository<Promotion, Integer> {
 	
 	//lấy khuyến mãi đang diễn ra
 	List<Promotion> findByStartDateLessThanEqualAndEndDateGreaterThanEqual(LocalDate currentDate1, LocalDate currentDate2);
+	
+	//lấy tất cả khuyến mãi 
+	List<Promotion> findAll();
+	
+	//cập nhật khuyến mãi
+	@SuppressWarnings("unchecked")
+	Promotion save(Promotion promotion);
 }

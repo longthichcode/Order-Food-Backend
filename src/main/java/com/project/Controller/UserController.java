@@ -148,16 +148,33 @@ public class UserController {
 				.body(new ErrDTO("Failed to update password", request.getServletPath()));
 	}
 
-	// Xoá user
-	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteUser(@PathVariable int id, HttpServletRequest request) {
+	// Vô hiệu hoá tài khoản người dùng
+	@PutMapping("/dis/{id}")
+	public ResponseEntity<?> disableAccount(@PathVariable int id, HttpServletRequest request) {
 		User existing = userService.getUserById(id);
 		if (existing == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ErrDTO("User not found", request.getServletPath()));
 		}
 
-		boolean success = userService.deleteUser(id);
+		boolean success = userService.disableUserAccount(id);
+		if (success) {
+			return ResponseEntity.ok().build();
+		}
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+				.body(new ErrDTO("Failed to delete user", request.getServletPath()));
+	}
+	
+	// Mở khoá tài khoản người dùng
+	@PutMapping("/undis/{id}")
+	public ResponseEntity<?> undisableAccount(@PathVariable int id, HttpServletRequest request) {
+		User existing = userService.getUserById(id);
+		if (existing == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(new ErrDTO("User not found", request.getServletPath()));
+		}
+
+		boolean success = userService.undisableUserAccount(id);
 		if (success) {
 			return ResponseEntity.ok().build();
 		}
