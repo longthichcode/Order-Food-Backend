@@ -123,7 +123,8 @@ public class OrderService {
 
 		// Xóa giỏ hàng trong DB
 		cartService.clearCart(userId);
-
+		// Huỷ khuyến mãi đã áp dụng
+		cartService.removePromotion(userId);
 		return order;
 	}
 

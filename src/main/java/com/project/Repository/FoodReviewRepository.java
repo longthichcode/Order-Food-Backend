@@ -1,7 +1,11 @@
 package com.project.Repository;
 
 import com.project.Entity.FoodReview;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.util.List;
@@ -21,10 +25,14 @@ public interface FoodReviewRepository extends JpaRepository<FoodReview, Integer>
     List<FoodReview> findByUserUserIdAndIsVisibleTrue(Integer userId);
     
     //ẩn đánh giá món ăn 
+    @Transactional
+    @Modifying
     @Query("UPDATE FoodReview r SET r.isVisible = false WHERE r.reviewId = :reviewId")
     void hideReviewById(@Param("reviewId") Integer reviewId);
     
     //hiện đánh giá món ăn 
+    @Transactional
+    @Modifying
     @Query("UPDATE FoodReview r SET r.isVisible = true WHERE r.reviewId = :reviewId")
     void showReviewById(@Param("reviewId") Integer reviewId);
 }
