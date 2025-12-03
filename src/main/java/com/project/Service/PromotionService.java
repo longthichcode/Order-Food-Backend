@@ -52,4 +52,13 @@ public class PromotionService {
 		}
 		return promotionRepository.save(promotion);
 	}
+	
+	//thêm khuyến mãi
+	public Promotion addPromotion(Promotion promotion) {
+		//check trùng mã khuyến mãi
+		if (promotionRepository.findByCode(promotion.getCode()).isPresent()) {
+			throw new RuntimeException("Mã khuyến mãi đã tồn tại");
+		}
+		return promotionRepository.save(promotion);
+	}
 }

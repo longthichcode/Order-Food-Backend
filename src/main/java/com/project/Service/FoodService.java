@@ -347,6 +347,8 @@ public class FoodService {
         foodDTO.setIsPromotion(food.getIsPromotion());
         foodDTO.setOrderCount(food.getOrderCount());
         foodDTO.setCreatedAt(food.getCreatedAt());
+        foodDTO.setReviewCount(food.getReviewCount());
+        foodDTO.setAverageRating(food.getAverageRating());
         if (food.getCategory() != null) {
             foodDTO.setCategoryName(food.getCategory().getCategoryName());
         } else {
