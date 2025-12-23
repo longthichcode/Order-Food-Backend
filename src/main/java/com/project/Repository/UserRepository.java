@@ -28,7 +28,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	@Modifying
 	@Transactional
 	@Query(value = "UPDATE users SET role = :role WHERE user_id = :id", nativeQuery = true)
-	boolean updateUserRole(Integer id, String role);
+	int updateUserRole(Integer id, String role);
 
 	// khoá tài khoản người dùng
 	@Modifying

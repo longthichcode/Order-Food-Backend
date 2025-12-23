@@ -68,7 +68,11 @@ public class UserService {
 	// sửa vai trò người dùng
 	public boolean updateUserRole(Integer id, String role) {
 		try {
-			return userRepository.updateUserRole(id, role);
+			if(userRepository.updateUserRole(id, role) > 0)
+				return true;
+			else {
+				return false;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
